@@ -54,16 +54,22 @@ export class ReservationComponent implements OnInit {
 
     let id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
-      let reservation = this.reservationService.getReservationById(id);
-      if (reservation) {
-        this.reservationForm.patchValue({
-          checkInDate: reservation.checkInDate,
-          checkOutDate: reservation.checkOutDate,
-          guestName: reservation.guestName,
-          guestEmail: reservation.guestEmail,
-          roomNumber: reservation.roomNumber,
-        });
-      }
+      this.reservationService.getReservationById(id).subscribe({
+        next: (reservation) => {
+          if (reservation) {
+            this.reservationForm.patchValue({
+              checkInDate: reservation.checkInDate,
+              checkOutDate: reservation.checkOutDate,
+              guestName: reservation.guestName,
+              guestEmail: reservation.guestEmail,
+              roomNumber: reservation.roomNumber,
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching reservation:', error);
+        },
+      });
     }
   }
   onSubmit() {
@@ -72,9 +78,23 @@ export class ReservationComponent implements OnInit {
 
       let id = this.activatedRoute.snapshot.paramMap.get('id');
       if (id) {
-        this.reservationService.updateReservation(id, reservation);
+        this.reservationService.updateReservation(id, reservation).subscribe({
+          next: () => {
+            console.log('Reservation updated successfully');
+          },
+          error: (error) => {
+            console.error('Error updating reservation:', error);
+          },
+        });
       } else {
-        this.reservationService.addReservation(reservation);
+        this.reservationService.addReservation(reservation).subscribe({
+          next: () => {
+            console.log('Reservation added successfully');
+          },
+          error: (error) => {
+            console.error('Error adding reservation:', error);
+          },
+        });
       }
 
       this.router.navigate(['/list']);

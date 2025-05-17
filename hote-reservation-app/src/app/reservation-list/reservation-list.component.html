@@ -13,7 +13,7 @@
       <th scope="col">Actions</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody *ngIf="reservations.length > 0; else noReservation">
     <tr *ngFor="let res of reservations">
       <td>{{ res.guestName }}</td>
       <td>{{ res.guestEmail }}</td>
@@ -22,7 +22,7 @@
       <td>{{ res.roomNumber }}</td>
       <td>
         <button
-          class="btn btn-sm btn-danger mx-1"
+          class="btn btn-sm btn-danger m-1"
           (click)="deleteReservation(res.id)"
         >
           Delete
@@ -37,4 +37,6 @@
     </tr>
   </tbody>
 </table>
-<ng-template #noReservation> <p>No Reservation is available</p> </ng-template>
+<ng-template #noReservation>
+  <p class="text-center mt-2">No Reservation is available</p>
+</ng-template>

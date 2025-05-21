@@ -31,10 +31,7 @@ export class ProductListComponent implements OnInit {
   searchTerm: string = '';
   products: Product[] = [];
   filteredProducts: Product[] = [];
-  sortOptions = [
-    { value: 'name', viewValue: 'Name' },
-    { value: 'price', viewValue: 'Price' },
-  ];
+  sortOrder:string='';
 
   constructor(
     private productService: ProductService,
@@ -73,7 +70,19 @@ export class ProductListComponent implements OnInit {
     this.filteredProducts = this.products.filter((product) =>
       product.name.toLowerCase().includes(searchTerm)
     );
+
+    this.sortProducts(this.sortOrder);
   }
 
-  sortProducts(sortValue: string) {}
+  sortProducts(sortValue: string) {
+    this.sortOrder = sortValue;
+
+    if(this.sortOrder == "priceLowHigh"){
+       this.filteredProducts.sort((a,b)=>
+        a.price - b.price
+       )
+    }else if(this.sortOrder == "priceHighLow"){
+      this.filteredProducts.sort((a,b) => b.price - a.price)
+    }
+  }
 }
